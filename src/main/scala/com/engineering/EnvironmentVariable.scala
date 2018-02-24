@@ -14,7 +14,11 @@ object EnvironmentVariable {
 
     case object APPLICATION extends EnvironmentVariable("APPLICATION")
 
-    case object OUTPUT_FOLDER_PATH extends EnvironmentVariable("OUTPUT_FOLDER_PATH")
+    case object TRAFFIC_FOLDER_PATH extends EnvironmentVariable("TRAFFIC_FOLDER_PATH")
+
+    case object INDIVIDUALS_FOLDER_PATH extends EnvironmentVariable("INDIVIDUALS_FOLDER_PATH")
+
+    case object RESULTS_FOLDER_PATH extends EnvironmentVariable("RESULTS_FOLDER_PATH")
 
   }
 }

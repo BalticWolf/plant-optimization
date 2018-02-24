@@ -1,10 +1,9 @@
 package com.engineering.pathmaker
 
-import java.io.{BufferedWriter, File, FileWriter}
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Paths}
 
-import com.engineering.EnvironmentVariable.EnvironmentVariable.OUTPUT_FOLDER_PATH
+import com.engineering.EnvironmentVariable.EnvironmentVariable.TRAFFIC_FOLDER_PATH
 
 import scala.io.StdIn
 import scala.util.Properties
@@ -104,9 +103,9 @@ object PathMaker extends App {
 
       // FileWriter
       val completeFileName = fileName + kk
-      val completePath = Properties.envOrNone(s"$OUTPUT_FOLDER_PATH") match {
+      val completePath = Properties.envOrNone(s"$TRAFFIC_FOLDER_PATH") match {
         case Some(path) => path + "/" + completeFileName
-        case None => "src/main/output/" + completeFileName
+        case None => "src/main/output/traffic/" + completeFileName
       }
 
       val content = prepareOutput(nbMachines, Traffic)

@@ -1,5 +1,6 @@
+.DS_Store
 .idea
-target/*
 project/*
 src/main/c++/*
-.DS_Store
+src/main/output/*
+target/*

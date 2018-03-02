@@ -36,7 +36,7 @@ object Optimizer extends App {
   }
 
   private def testTraffic(file: File, replications: Int): (Double, Double, Double, Double) = {
-    val resultsFileName: String = "RES_" + file.toString
+    val resultsFileName: String = "RES_" + file.getName
 
     val strongest = Individual() // creation of the primordial individual
 
@@ -79,7 +79,7 @@ object Optimizer extends App {
     ) yield {
       line.split(" ").map(_.toDouble)
     }
-    bufferedSource.close
+//    bufferedSource.close
 
     traffic.filter(_.nonEmpty).toArray
   }

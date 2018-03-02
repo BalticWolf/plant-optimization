@@ -67,7 +67,7 @@ case class Population(group: List[Individual],
     def loop(before: List[Individual], after: List[Individual]): List[Individual] = before match {
       case Nil => after
       case remain =>
-        val index = Population.rand.nextInt(group.length - 1)
+        val index = Population.rand.nextInt(remain.length)
         val localStrongest = remain(index).whoIsBest(remain.head)
         loop(remain.tail, after :+ localStrongest)
     }

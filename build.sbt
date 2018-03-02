@@ -8,7 +8,12 @@ lazy val commonSettings = Seq(
 
 lazy val root = (project in file("."))
   .settings(commonSettings: _*)
+  .settings(parallelExecution := false)
   .settings(libraryDependencies ++= Seq(
     "com.beachape" %% "enumeratum" % "1.5.12",
-    "org.scalatest" %% "scalatest" % "3.0.4" % Test
+    "org.specs2" %% "specs2-core" % "4.0.2" % Test
   ))
+  .settings(
+    scalacOptions ++= Seq("-deprecation", "-feature"),
+    scalacOptions in Test ++= Seq("-Yrangepos")
+  )

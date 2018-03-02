@@ -3,7 +3,7 @@ package com.engineering.optimizer
 import java.io.File
 import java.nio.file.Paths
 
-import com.engineering.EnvironmentVariable.EnvironmentVariable.TRAFFIC_FOLDER_PATH
+import com.engineering.EnvironmentVariables.EnvironmentVariable.TRAFFIC_FOLDER_PATH
 import com.engineering.model.{Individual, Population}
 import com.engineering.utils.FileTools
 

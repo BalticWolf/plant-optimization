@@ -1,6 +1,6 @@
 package com.engineering
 
-import com.engineering.EnvironmentVariable.EnvironmentVariable.APPLICATION
+import com.engineering.EnvironmentVariables.EnvironmentVariable.APPLICATION
 import com.engineering.pathmaker.PathMaker
 import com.engineering.optimizer.Optimizer
 

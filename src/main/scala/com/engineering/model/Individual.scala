@@ -1,6 +1,6 @@
 package com.engineering.model
 
-import com.engineering.EnvironmentVariable.EnvironmentVariable.INDIVIDUALS_FOLDER_PATH
+import com.engineering.EnvironmentVariables.EnvironmentVariable.INDIVIDUALS_FOLDER_PATH
 import com.engineering.utils.FileTools
 
 import scala.util.{Properties, Random}

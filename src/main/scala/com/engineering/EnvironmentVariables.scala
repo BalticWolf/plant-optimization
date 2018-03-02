@@ -3,8 +3,9 @@ package com.engineering
 import enumeratum.values.{StringEnum, StringEnumEntry}
 
 import scala.collection.immutable.IndexedSeq
+import scala.util.Properties
 
-object EnvironmentVariable {
+object EnvironmentVariables {
 
   sealed abstract class EnvironmentVariable(val value: String) extends StringEnumEntry
 
@@ -20,5 +21,11 @@ object EnvironmentVariable {
 
     case object RESULTS_FOLDER_PATH extends EnvironmentVariable("RESULTS_FOLDER_PATH")
 
+  }
+
+  def envOrError(environmentVariable: EnvironmentVariable): Either[Error, String] = {
+    Properties
+      .envOrNone(s"$environmentVariable")
+      .toRight(new Error(s"$environmentVariable environment variable is not defined"))
   }
 }

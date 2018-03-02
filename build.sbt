@@ -10,5 +10,5 @@ lazy val root = (project in file("."))
   .settings(commonSettings: _*)
   .settings(libraryDependencies ++= Seq(
     "com.beachape" %% "enumeratum" % "1.5.12",
-    "org.scalatest" %% "scalatest" % "3.0.4" % Test
+    "org.specs2" %% "specs2-core" % "4.0.2" % Test
   ))

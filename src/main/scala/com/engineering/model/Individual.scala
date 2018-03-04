@@ -3,7 +3,8 @@ package com.engineering.model
 import com.engineering.EnvironmentVariables.EnvironmentVariable.INDIVIDUALS_FOLDER_PATH
 import com.engineering.utils.FileTools
 
-import scala.util.{Properties, Random}
+import scala.util.Random
+
 
 /**
   * The class Individual defines a plant configuration (machines evenly spread throughout cells).
@@ -69,12 +70,11 @@ case class Individual(machines: List[Int],
     * @param fileName is the name of the file in which the content will be saved
     */
   def writeToFile(fileName: String): Unit = {
-    val completePath = Properties.envOrNone(s"$INDIVIDUALS_FOLDER_PATH") match {
-      case Some(path) => path + "/" + fileName
-      case None => "src/main/output/individuals/" + fileName
+    FileTools.getFolderPath(INDIVIDUALS_FOLDER_PATH) match {
+      case Right(folder) =>
+        FileTools.saveFileToFolder(folder, fileName, this.toString)
+      case Left(error) => println(error)
     }
-
-    FileTools.save(completePath, this.toString)
   }
 
   override def toString: String = {

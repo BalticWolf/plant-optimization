@@ -18,12 +18,12 @@ case class Individual(machines: List[Int],
     * @param traffic matrix representing traffic between machine i and machine j
     * @return Individual with calculated entropy
     */
-  def evaluate(traffic: Array[Array[Double]]): Individual = {
+  def evaluate(traffic: Traffic): Individual = {
     val accumulator = for (
-      i <- traffic.indices;
-      j <- traffic.indices
+      i <- traffic.matrix.indices;
+      j <- traffic.matrix.indices
       if i != j
-    ) yield traffic(i)(j)
+    ) yield traffic.matrix(i)(j)
 
     this.copy(
       entropy = accumulator.sum,

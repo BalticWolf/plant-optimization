@@ -2,11 +2,13 @@ package com.engineering.optimizer
 
 import java.io.File
 
-import com.engineering.EnvironmentVariables.EnvironmentVariable.TRAFFIC_FOLDER_PATH
-import com.engineering.model.{Individual, Population}
+import com.engineering.EnvironmentVariables
+import com.engineering.EnvironmentVariables.EnvironmentVariable.{REPLICATIONS, TRAFFIC_FOLDER_PATH}
+import com.engineering.model.{Individual, Population, Traffic}
 import com.engineering.utils.FileTools
 
 import scala.io.Source
+import scala.util.{Failure, Success, Try}
 
 
 object Optimizer extends App {
@@ -17,21 +19,27 @@ object Optimizer extends App {
   override def main(args: Array[String]): Unit = {
     println("Optimizer just started...")
 
-    FileTools.listFiles(TRAFFIC_FOLDER_PATH) match {
-      case Right(files) =>
-        files.foreach(file => {
-          val replications = 2
+    EnvironmentVariables.envOrError(REPLICATIONS) match {
+      case Right(replications) =>
+        FileTools.listFiles(TRAFFIC_FOLDER_PATH) match {
+          case Right(files) =>
+            files.foreach(file => {
+              Try(replications.toInt) match {
+                case Success(rep) =>
 
-          val (totalBestEntropy, totalBestGeneration, allTimeBestEntropy, allTimeWorstEntropy) = testTraffic(file, replications)
+                  val (totalBestEntropy, totalBestGeneration, allTimeBestEntropy, allTimeWorstEntropy) = testTraffic(file, rep)
 
-          println("\nAverage entropy of the strongest: " + totalBestEntropy / replications)
-          println("\nAverage generation of the strongest: " + totalBestGeneration / replications)
-          println("\nBest entropy of all time: " + allTimeBestEntropy)
-          println("\nWorst entropy of all time: "+ allTimeWorstEntropy)
-        })
+                  println("\nAverage entropy of the strongest: " + totalBestEntropy / rep)
+                  println("\nAverage generation of the strongest: " + totalBestGeneration / rep)
+                  println("\nBest entropy of all time: " + allTimeBestEntropy)
+                  println("\nWorst entropy of all time: "+ allTimeWorstEntropy)
 
+                case Failure(error) => println(error)
+              }
+            })
+          case Left(error) => println(error)
+        }
       case Left(error) => println(error)
-
     }
     println("\nFinished")
   }
@@ -57,6 +65,7 @@ object Optimizer extends App {
         val bestEntropy = strongest.entropy
 
         population.lifeCycle(traffic, strongest)
+
         val reAssessedEntropy = strongest.evaluate(traffic).entropy
         strongest.writeToFile(resultsFileName)
 
@@ -73,7 +82,12 @@ object Optimizer extends App {
     loop(replications, strongest, 0, 0, Individual.defaultEntropy, Individual.minimumEntropy)
   }
 
-  private def readTraffic(file: File): Array[Array[Double]] = {
+  /**
+    * Read a traffic file to parse the content as a traffic matrix.
+    * @param file is the file containing the information
+    * @return a traffic matrix
+    */
+  private def readTraffic(file: File): Traffic = {
     val bufferedSource = Source.fromFile(file)
     val traffic = for (
       line <- bufferedSource.getLines
@@ -82,6 +96,6 @@ object Optimizer extends App {
     }
 //    bufferedSource.close
 
-    traffic.filter(_.nonEmpty).toArray
+    Traffic(traffic.filter(_.nonEmpty).toArray)
   }
 }

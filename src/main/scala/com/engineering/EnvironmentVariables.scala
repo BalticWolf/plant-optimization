@@ -15,6 +15,8 @@ object EnvironmentVariables {
 
     case object APPLICATION extends EnvironmentVariable("APPLICATION")
 
+    case object REPLICATIONS extends EnvironmentVariable("REPLICATIONS")
+
     case object TRAFFIC_FOLDER_PATH extends EnvironmentVariable("TRAFFIC_FOLDER_PATH")
 
     case object INDIVIDUALS_FOLDER_PATH extends EnvironmentVariable("INDIVIDUALS_FOLDER_PATH")

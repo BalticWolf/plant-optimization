@@ -29,19 +29,19 @@ object PathMaker extends App {
     * @param context of production environment
     */
   def generateTrafficFiles(context: Variation): Unit = {
-    val (fileStem, mask) = context match {
-      case Canonical => ("CANONICAL_" + nbMachines + "_", Canonical.mask)
-      case Disrupted => ("DISRUPTED_" + nbMachines + "_", Disrupted.mask)
+    val fileStem = context match {
+      case Canonical => "CANONICAL_" + nbMachines + "_"
+      case Disrupted => "DISRUPTED_" + nbMachines + "_"
     }
 
-    val productMix = buildProductMix(nbEnvironments, nbProducts, mask)
+    val productMix = buildProductMix(nbEnvironments, nbProducts, context.mask)
 
     // FileWriter
     FileTools.getFolderPath(TRAFFIC_FOLDER_PATH) match {
       case Right(path) =>
         Range(0, nbEnvironments).foreach(environment => {
           val traffic = Traffic(nbMachines, environment, ProductLine.routing, productMix)
-          FileTools.saveFileToFolder(path, fileStem + environment,traffic.toString)
+          FileTools.saveFileToFolder(path, fileStem + environment, traffic.toString)
         })
 
       case Left(error) => println(error)
@@ -58,20 +58,13 @@ object PathMaker extends App {
   def buildProductMix(nbEnvironments: Int,
                       nbProducts: Int,
                       mask: Array[Array[Int]]): Array[Array[Double]] = {
-    println("\nPRODUCT MIX")
-    val mixProduct = Array.ofDim[Double](nbEnvironments, nbProducts)
-    for(i <- 0 until nbProducts) {
-      mixProduct(0)(i) = 100
-    }
-    for (environment <- mask.indices) {
-      println("Environment: " + environment)
 
-      for (product <- mask(environment).indices) {
-        mixProduct(environment)(product) = mixProduct(0)(product) * (1 + mask(environment)(product) / 100.0)
-        mixProduct(environment)(product) = math.floor(10000 * mixProduct(environment)(product) / mixProduct(environment).sum)/100
-        println(" Prod." + product + ": " + mixProduct(environment)(product))
+    val initial = Array(100, 100, 100)
+    mask.map(products => {
+      val tmp = initial.zip(products).map {
+        case (x, y) => x * (1 + y/100.0)
       }
-    }
-    mixProduct
+      tmp.map(z => math.floor(100 * (100 * z/tmp.sum)) / 100)
+    })
   }
 }

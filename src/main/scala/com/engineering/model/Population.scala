@@ -8,7 +8,7 @@ case class Population(group: List[Individual],
   /**
     * Test a population evolving through several generations.
     */
-  def lifeCycle(traffic: Array[Array[Double]], strongest: Individual): Population = {
+  def lifeCycle(traffic: Traffic, strongest: Individual): Population = {
     def loop(population: Population, countGeneration: Int): Population = {
       if (countGeneration < Population.maxGeneration) {
         val pop = mutate()
@@ -25,7 +25,7 @@ case class Population(group: List[Individual],
     * Evaluate all the Individuals in the population group.
     * @return evaluated population
     */
-  def evaluate(traffic: Array[Array[Double]]): Population = {
+  def evaluate(traffic: Traffic): Population = {
     this.copy(
       group = this.group
       .filterNot(_.isTested)

@@ -1,9 +1,10 @@
 package com.engineering.model
 
-import com.engineering.EnvironmentVariable.EnvironmentVariable.INDIVIDUALS_FOLDER_PATH
+import com.engineering.EnvironmentVariables.EnvironmentVariable.INDIVIDUALS_FOLDER_PATH
 import com.engineering.utils.FileTools
 
-import scala.util.{Properties, Random}
+import scala.util.Random
+
 
 /**
   * The class Individual defines a plant configuration (machines evenly spread throughout cells).
@@ -17,12 +18,12 @@ case class Individual(machines: List[Int],
     * @param traffic matrix representing traffic between machine i and machine j
     * @return Individual with calculated entropy
     */
-  def evaluate(traffic: Array[Array[Double]]): Individual = {
+  def evaluate(traffic: Traffic): Individual = {
     val accumulator = for (
-      i <- traffic.indices;
-      j <- traffic.indices
+      i <- traffic.matrix.indices;
+      j <- traffic.matrix.indices
       if i != j
-    ) yield traffic(i)(j)
+    ) yield traffic.matrix(i)(j)
 
     this.copy(
       entropy = accumulator.sum,
@@ -69,12 +70,11 @@ case class Individual(machines: List[Int],
     * @param fileName is the name of the file in which the content will be saved
     */
   def writeToFile(fileName: String): Unit = {
-    val completePath = Properties.envOrNone(s"$INDIVIDUALS_FOLDER_PATH") match {
-      case Some(path) => path + "/" + fileName
-      case None => "src/main/output/individuals/" + fileName
+    FileTools.getFolderPath(INDIVIDUALS_FOLDER_PATH) match {
+      case Right(folder) =>
+        FileTools.saveFileToFolder(folder, fileName, this.toString)
+      case Left(error) => println(error)
     }
-
-    FileTools.save(completePath, this.toString)
   }
 
   override def toString: String = {

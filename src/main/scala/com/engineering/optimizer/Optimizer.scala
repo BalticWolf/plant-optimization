@@ -27,12 +27,12 @@ object Optimizer extends App {
               Try(replications.toInt) match {
                 case Success(rep) =>
 
-                  val (totalBestEntropy, totalBestGeneration, allTimeBestEntropy, allTimeWorstEntropy) = testTraffic(file, rep)
+                  val replicationResults = testTraffic(file, rep)
 
-                  println("\nAverage entropy of the strongest: " + totalBestEntropy / rep)
-                  println("\nAverage generation of the strongest: " + totalBestGeneration / rep)
-                  println("\nBest entropy of all time: " + allTimeBestEntropy)
-                  println("\nWorst entropy of all time: "+ allTimeWorstEntropy)
+                  println("\nAverage entropy of the strongest: " + replicationResults.totalBestEntropy / rep)
+                  println("\nAverage generation of the strongest: " + replicationResults.totalBestGeneration / rep)
+                  println("\nBest entropy of all time: " + replicationResults.allTimeBestEntropy)
+                  println("\nWorst entropy of all time: "+ replicationResults.allTimeWorstEntropy)
 
                 case Failure(error) => println(error)
               }
@@ -44,43 +44,54 @@ object Optimizer extends App {
     println("\nFinished")
   }
 
-  private def testTraffic(file: File, replications: Int): (Double, Double, Double, Double) = {
+  /**
+    * For a given traffic file, test a population in evolution, on several replications.
+    * @param file traffic input
+    * @param replications number of population life cycles
+    * @return quadruplet of simulation results
+    */
+  private def testTraffic(file: File, replications: Int): ReplicationResults = {
     val resultsFileName: String = "RES_" + file.getName
-
-    val strongest = Individual() // creation of the primordial individual
-
     val traffic = readTraffic(file)
 
-    def loop(replications: Int,
-             strongest: Individual,
-             totalBestEntropy: Double,
-             totalBestGeneration: Double,
-             allTimeBestEntropy: Double,
-             allTimeWorstEntropy: Double
-            ): (Double, Double, Double, Double) = replications match {
-      case r if r > 0 =>
+    val initialPopulation = Population() // creation of the primordial population
+    val initialIndividual = Individual() // creation of the primordial control individual
 
-        val population = Population()
+    val replicationStarters = ReplicationResults(0, 0, Individual.defaultEntropy, Individual.minimumEntropy)
+
+    def loop(replications: Int,
+             population: Population,
+             strongest: Individual,
+             replicationResults: ReplicationResults): ReplicationResults = replications match {
+      case r if r > 0 =>
 
         val bestEntropy = strongest.entropy
 
-        population.lifeCycle(traffic, strongest)
+        val nextPop = population.lifeCycle(traffic, strongest)
+        val nextStrongest = nextPop.group.head
 
-        val reAssessedEntropy = strongest.evaluate(traffic).entropy
-        strongest.writeToFile(resultsFileName)
+        val reAssessedEntropy = nextStrongest.evaluate(traffic).entropy
+        nextStrongest.writeToFile(resultsFileName)
 
-        loop(replications - 1,
-          strongest.reset(),
-          totalBestEntropy + reAssessedEntropy,
-          totalBestGeneration + population.bestGeneration,
-          math.min(bestEntropy, allTimeBestEntropy),
-          math.max(bestEntropy, allTimeWorstEntropy)
+        val nextResults = ReplicationResults(
+          replicationResults.totalBestEntropy + reAssessedEntropy,
+          replicationResults.totalBestGeneration + population.bestGeneration,
+          math.min(bestEntropy, replicationResults.allTimeBestEntropy),
+          math.max(bestEntropy, replicationResults.allTimeWorstEntropy)
         )
-      case 0 => (totalBestEntropy, totalBestGeneration, allTimeBestEntropy, allTimeWorstEntropy)
+
+        loop(replications - 1, nextPop, nextStrongest.reset(), nextResults)
+
+      case 0 => replicationResults
     }
 
-    loop(replications, strongest, 0, 0, Individual.defaultEntropy, Individual.minimumEntropy)
+    loop(replications, initialPopulation, initialIndividual, replicationStarters)
   }
+
+  case class ReplicationResults(totalBestEntropy: Double,
+                                totalBestGeneration: Double,
+                                allTimeBestEntropy: Double,
+                                allTimeWorstEntropy: Double)
 
   /**
     * Read a traffic file to parse the content as a traffic matrix.

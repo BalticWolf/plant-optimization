@@ -20,8 +20,8 @@ case class Individual(machines: List[Int],
     */
   def evaluate(traffic: Traffic): Individual = {
     val accumulator = for (
-      i <- traffic.matrix.indices;
-      j <- traffic.matrix.indices
+      i <- this.machines.indices;
+      j <- this.machines.indices
       if i != j
     ) yield traffic.matrix(i)(j)
 

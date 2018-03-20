@@ -34,7 +34,7 @@ object PathMaker extends App {
       case Disrupted => "DISRUPTED_" + nbMachines + "_"
     }
 
-    val productMix = buildProductMix(nbEnvironments, nbProducts, context.mask)
+    val productMix = buildProductMix(context.mask)
 
     // FileWriter
     FileTools.getFolderPath(TRAFFIC_FOLDER_PATH) match {
@@ -50,14 +50,10 @@ object PathMaker extends App {
 
   /**
     * Build a productMix matrix.
-    * @param nbEnvironments number of environments
-    * @param nbProducts number of products
     * @param mask modulation of product mix per environment
     * @return product mix per environment
     */
-  def buildProductMix(nbEnvironments: Int,
-                      nbProducts: Int,
-                      mask: Array[Array[Int]]): Array[Array[Double]] = {
+  def buildProductMix(mask: Array[Array[Int]]): Array[Array[Double]] = {
 
     val initial = Array(100, 100, 100)
     mask.map(products => {

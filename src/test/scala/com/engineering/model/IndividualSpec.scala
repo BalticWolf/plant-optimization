@@ -3,9 +3,9 @@ package com.engineering.model
 import org.specs2.mutable.Specification
 import org.specs2.specification.{AfterEach, BeforeEach}
 
-class IndividualTest extends Specification with BeforeEach with AfterEach {
+class IndividualSpec extends Specification with BeforeEach with AfterEach {
 
-  val testIndividual: Individual = Individual().copy(entropy = 4256.21)
+  val controlIndividual: Individual = Individual().copy(entropy = 4256.21)
 
   override protected def before: Any = {
   }
@@ -17,9 +17,9 @@ class IndividualTest extends Specification with BeforeEach with AfterEach {
   "reset Individual" should {
 
     "-> only change its entropy" in {
-      val isTested = testIndividual.isTested
-      val machines = testIndividual.machines
-      val nextIndividual = testIndividual.reset()
+      val isTested = controlIndividual.isTested
+      val machines = controlIndividual.machines
+      val nextIndividual = controlIndividual.reset()
 
       nextIndividual.entropy == 1000000.0 and
       nextIndividual.isTested == isTested and
@@ -30,9 +30,9 @@ class IndividualTest extends Specification with BeforeEach with AfterEach {
 
   "whoIsBest" should {
     "-> yield the individual of minimum entropy among 2" in {
-      val weakestIndividual = testIndividual.copy(entropy = 9456.4)
+      val weakestIndividual = controlIndividual.copy(entropy = 9456.4)
 
-      weakestIndividual.whoIsBest(testIndividual) == testIndividual
+      weakestIndividual.whoIsBest(controlIndividual) == controlIndividual
     }
   }
 

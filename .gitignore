@@ -2,5 +2,5 @@
 .idea
 project/*
 src/main/c++/*
-src/main/output/*
+output/*
 target/*

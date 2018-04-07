@@ -1,6 +1,6 @@
 This project was initiated at IFMA during my engineering studies. 
 As I majored in manufacturing management, this is about plant optimization. 
-Initially written in C++, I wanted to have fun and write in Scala.
+Initially written in C++, I wanted to have fun and write it in Scala.
 
 ## Context
 There's a workshop, organized in flexible cells (5 machines per cell). 

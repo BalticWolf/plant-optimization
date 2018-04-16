@@ -10,8 +10,8 @@ import scala.util.Random
   * The class Individual defines a plant configuration (machines evenly spread throughout cells).
   */
 case class Individual(machines: List[Int],
-                      entropy: Double,
-                      isTested: Boolean) {
+                      entropy: Double = Individual.defaultEntropy,
+                      isTested: Boolean = false) {
 
   /**
     * Evaluate entropy of the system, regarding the traffic matrix.
@@ -22,7 +22,7 @@ case class Individual(machines: List[Int],
     val accumulator = for (
       i <- this.machines.indices;
       j <- this.machines.indices
-      if i != j
+      if this.machines(i) != this.machines(j)
     ) yield traffic.matrix(i)(j)
 
     this.copy(

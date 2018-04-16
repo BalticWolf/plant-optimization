@@ -1,5 +1,6 @@
 package com.engineering.model
 
+import com.engineering.pathmaker.ContextBuilder
 import org.specs2.mutable.Specification
 import org.specs2.specification.{AfterEach, BeforeEach}
 
@@ -15,7 +16,6 @@ class IndividualSpec extends Specification with BeforeEach with AfterEach {
   }
 
   "reset Individual" should {
-
     "-> only change its entropy" in {
       val isTested = controlIndividual.isTested
       val machines = controlIndividual.machines
@@ -33,6 +33,18 @@ class IndividualSpec extends Specification with BeforeEach with AfterEach {
       val weakestIndividual = controlIndividual.copy(entropy = 9456.4)
 
       weakestIndividual.whoIsBest(controlIndividual) == controlIndividual
+    }
+  }
+
+  "evaluate" should {
+    "-> give this entropy" in {
+      val controlIndividual = Individual(
+        machines = List(0, 2, 3, 1, 3, 1, 2, 4, 1, 2, 0, 0, 4, 0, 3, 3, 0, 1, 1, 4, 2, 4, 3, 2, 4)
+      )
+      val traffic = Traffic(ContextBuilder.trafficMatrix)
+      val evaluatedIndividual = controlIndividual.evaluate(traffic)
+
+      evaluatedIndividual.entropy == 1577.9800000000014
     }
   }
 

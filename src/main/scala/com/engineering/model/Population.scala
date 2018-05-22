@@ -82,7 +82,7 @@ case class Population(group: List[Individual],
     * @param pop list of individuals
     * @return best individual regarding its entropy
     */
-  private def getBestIndividual(pop: List[Individual]): Individual = pop.minBy(_.entropy)
+  def getBestIndividual(pop: List[Individual]): Individual = pop.minBy(_.entropy)
 }
 
 object Population {

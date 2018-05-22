@@ -66,7 +66,7 @@ object Optimizer extends App {
       case r if r > 0 =>
 
         val nextPop = population.lifeCycle(traffic, strongest)
-        val nextStrongest = nextPop.group.head
+        val nextStrongest = nextPop.getBestIndividual(nextPop.group)
 
         val reAssessedEntropy = nextStrongest.evaluate(traffic).entropy
         nextStrongest.writeToFile(resultsFileName)

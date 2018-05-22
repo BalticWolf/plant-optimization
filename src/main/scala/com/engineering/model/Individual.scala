@@ -104,7 +104,7 @@ object Individual {
   }
 
   /**
-    * Randomly spread machines throughout cells.
+    * Randomly distribute machines among cells.
     */
   private def initialize(): List[Int] = {
     val installation = for (

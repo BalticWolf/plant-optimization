@@ -65,8 +65,6 @@ object Optimizer extends App {
              replicationResults: ReplicationResults): ReplicationResults = replications match {
       case r if r > 0 =>
 
-        val bestEntropy = strongest.entropy
-
         val nextPop = population.lifeCycle(traffic, strongest)
         val nextStrongest = nextPop.group.head
 
@@ -76,8 +74,8 @@ object Optimizer extends App {
         val nextResults = ReplicationResults(
           replicationResults.totalBestEntropy + reAssessedEntropy,
           replicationResults.totalBestGeneration + population.bestGeneration,
-          math.min(bestEntropy, replicationResults.allTimeBestEntropy),
-          math.max(bestEntropy, replicationResults.allTimeWorstEntropy)
+          math.min(reAssessedEntropy, replicationResults.allTimeBestEntropy),
+          math.max(reAssessedEntropy, replicationResults.allTimeWorstEntropy)
         )
 
         loop(replications - 1, nextPop, nextStrongest.reset(), nextResults)

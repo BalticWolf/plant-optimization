@@ -52,7 +52,7 @@ case class Individual(machines: List[Int],
   }
 
   /**
-    * Randomly spread machines throughout cells.
+    * Randomly distribute machines among cells.
     * @return shuffled list
     */
   private def swapMachines(machines: List[Int]): List[Int] = {
@@ -123,9 +123,8 @@ object Individual {
   private def shuffle(before: List[Int], after: List[Int]): List[Int] = before match {
     case Nil => after
     case remain =>
-      val half = remain.splitAt(
-        rand.nextInt(remain.length) // Select a random index in remain
-      )
+      val i = rand.nextInt(remain.length) // Select a random index in remain
+      val half = remain.splitAt(i)
 
       shuffle(
         half._1 ++ half._2.tail, // exclude remain(i) from before

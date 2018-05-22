@@ -28,8 +28,8 @@ case class Population(group: List[Individual],
   def evaluate(traffic: Traffic): Population = {
     this.copy(
       group = this.group
-      .filterNot(_.isTested)
-      .map(_.evaluate(traffic))
+        .filterNot(_.isTested)
+        .map(_.evaluate(traffic))
     )
   }
 
@@ -43,7 +43,7 @@ case class Population(group: List[Individual],
       case remain =>
         val p = Population.rand.nextInt(100) / 100F
         val nextIndividual =
-          if (p < Population.mutationProbability)
+          if (p > 1 - Population.mutationProbability)
             remain.head.mutate()
           else
             remain.head
